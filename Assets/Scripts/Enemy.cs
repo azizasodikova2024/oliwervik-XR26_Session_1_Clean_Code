@@ -1,12 +1,17 @@
 using UnityEngine;
+
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float damage = 10f;
-    void OnCollisionEnter(Collision col)
+
+    private void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.CompareTag("Player"))
         {
-            col.gameObject.GetComponent<PlayerStats>().TakeDamage(damage);
+            if (col.gameObject.TryGetComponent<IDamageable>(out var damageable))
+            {
+                damageable.TakeDamage(damage);
+            }
             Destroy(gameObject);
         }
     }
